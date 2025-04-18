@@ -6,6 +6,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -35,6 +37,7 @@ public class User {
     }
 
     @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL)
+    @JsonManagedReference  // This ensures the User entity is serialized
     private List<Lead> leads;
 
     @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL)
@@ -45,6 +48,14 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Note> notes;
+    
+ // ✅ OTP for password reset
+    @Column(name = "otp_code")
+    private String otpCode;
+
+    // ✅ OTP expiration time
+    @Column(name = "otp_expiry")
+    private LocalDateTime otpExpiry;
 
     public enum Role {
         ADMIN,

@@ -29,4 +29,8 @@ public class Note {
     private String note;
 
     private LocalDateTime createdAt;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

@@ -33,6 +33,10 @@ public class Property {
     private User assignedTo;
 
     private LocalDateTime createdAt;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     public enum Status {
         AVAILABLE,

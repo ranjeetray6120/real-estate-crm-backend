@@ -3,20 +3,27 @@ package com.example.real_estate_crm.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import lombok.RequiredArgsConstructor;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.real_estate_crm.model.User;
 import com.example.real_estate_crm.repository.UserRepository;
 import com.example.real_estate_crm.service.dao.UserDao;
 
+import java.util.Optional;
+
 @Repository
-@RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // Remove mailSender if not used — or @Autowired it properly if needed
+    // @Autowired
+    // private JavaMailSender mailSender;
 
     @Override
     public List<User> getAllUsers() {
@@ -24,8 +31,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUserId(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -56,17 +63,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User login(String email, String password) {
-        // Do NOT use plain text match — should use PasswordEncoder's match method
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return user;
-        }
-        return null;
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
     public void logout(Long userId) {
         System.out.println("User logged out: " + userId);
+        // Consider implementing token invalidation if using JWT/session
     }
 }

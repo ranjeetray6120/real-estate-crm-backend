@@ -30,5 +30,9 @@ public class FollowUp {
     private LocalDateTime followupDate;
     private LocalDateTime nextFollowup;
     private LocalDateTime createdAt;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 	
 }
