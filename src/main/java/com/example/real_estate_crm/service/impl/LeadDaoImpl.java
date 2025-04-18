@@ -8,16 +8,23 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import com.example.real_estate_crm.model.Lead;
+import com.example.real_estate_crm.model.LeadStatus;
 import com.example.real_estate_crm.model.User;
 import com.example.real_estate_crm.repository.LeadRepository;
 import com.example.real_estate_crm.repository.UserRepository;
 import com.example.real_estate_crm.service.dao.LeadDao;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class LeadDaoImpl implements LeadDao {
 
     @Autowired
     private LeadRepository leadRepository;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
     
     @Autowired
     private UserRepository userRepository;  // Autowired to handle the user lookup
@@ -71,5 +78,14 @@ public class LeadDaoImpl implements LeadDao {
     @Override
     public void deleteById(Long id) {
         leadRepository.deleteById(id);
+    }
+    
+    
+    @Override
+    public List<Lead> findByStatus(LeadStatus status) {
+        String jpql = "SELECT l FROM Lead l WHERE l.status = :status";
+        return entityManager.createQuery(jpql, Lead.class)
+                .setParameter("status", status)
+                .getResultList();
     }
 }

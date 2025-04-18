@@ -46,13 +46,32 @@ public class UserController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
         try {
-            User updatedUser = userDao.updateUser(user);
+            if (id == null) {
+                return ResponseEntity.badRequest().body("User ID is required for update.");
+            }
+
+            Optional<User> existingUserOptional = userDao.findById(id);
+            if (!existingUserOptional.isPresent()) {
+                return ResponseEntity.status(404).body("User not found with ID: " + id);
+            }
+
+            User existingUser = existingUserOptional.get();
+            existingUser.setName(user.getName());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPhone(user.getPhone());
+            existingUser.setRole(user.getRole());
+
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+
+            User updatedUser = userDao.save(existingUser);
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
-            return ResponseEntity.status(404).body("User not found: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error updating user: " + e.getMessage());
         }
     }
 

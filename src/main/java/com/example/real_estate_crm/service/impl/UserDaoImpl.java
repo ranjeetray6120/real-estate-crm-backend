@@ -1,8 +1,9 @@
 package com.example.real_estate_crm.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -10,9 +11,7 @@ import com.example.real_estate_crm.model.User;
 import com.example.real_estate_crm.repository.UserRepository;
 import com.example.real_estate_crm.service.dao.UserDao;
 
-import java.util.Optional;
-
-@Repository
+@Service
 public class UserDaoImpl implements UserDao {
 
     @Autowired
@@ -21,9 +20,7 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Remove mailSender if not used — or @Autowired it properly if needed
-    // @Autowired
-    // private JavaMailSender mailSender;
+    // @Autowired private JavaMailSender mailSender; // If you are not using mailSender, remove it
 
     @Override
     public List<User> getAllUsers() {
@@ -70,6 +67,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void logout(Long userId) {
         System.out.println("User logged out: " + userId);
-        // Consider implementing token invalidation if using JWT/session
+        // Implement token invalidation if you're using JWT or session-based auth
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        // This is automatically handled by Spring Data JPA's repository
+        return userRepository.findById(id);
     }
 }

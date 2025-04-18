@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.real_estate_crm.model.Lead;
+import com.example.real_estate_crm.model.LeadStatus;
 import com.example.real_estate_crm.service.dao.LeadDao;
 
 import java.util.List;
@@ -54,4 +55,10 @@ public class LeadController {
         leadService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/status/{status}")
+    public List<Lead> getLeadsByStatus(@PathVariable("status") LeadStatus status) {
+        return leadService.findByStatus(status);
+    }
+
 }

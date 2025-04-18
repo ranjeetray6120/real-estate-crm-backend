@@ -20,4 +20,6 @@ public interface UserDao {
 
     // Optionally: logout-related functionality only if you're tracking sessions
     void logout(Long userId); // You can omit this if not managing sessions server-side
+
+	Optional<User> findById(Long id);
 }

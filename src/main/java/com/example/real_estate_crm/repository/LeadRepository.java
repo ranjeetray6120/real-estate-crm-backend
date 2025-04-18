@@ -2,6 +2,7 @@ package com.example.real_estate_crm.repository;
 
 
 import com.example.real_estate_crm.model.Lead;
+import com.example.real_estate_crm.model.LeadStatus;
 import com.example.real_estate_crm.model.User;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
 
     // Example: Find leads by assigned user
      List<Lead> findByAssignedTo(User assignedTo);
+     
+     List<Lead> findByStatus(LeadStatus status);
 }
